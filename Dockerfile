@@ -1,7 +1,7 @@
 FROM n8nio/n8n:latest
 
-# Railway injects $PORT automatically
-ENV N8N_HOST=n8n-railway-demo-production.up.railway.app
+# n8n should bind to all interfaces inside the container
+ENV N8N_HOST=0.0.0.0
 
-# Expose the port n8n will run on (Railway's $PORT)
-EXPOSE $PORT
+# Expose default internal port (Railway maps its runtime $PORT -> this internal port)
+EXPOSE 5678
