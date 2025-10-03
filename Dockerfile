@@ -4,5 +4,5 @@ FROM n8nio/n8n:latest
 # Bind to all interfaces inside the container
 ENV N8N_HOST=66.33.22.56
 
-# Expose internal port (n8n default). Railway will map its runtime $PORT to this.
+# Expose internal port (n8n default). Railway will map its runtime $PORT to this. #
 EXPOSE 5678
