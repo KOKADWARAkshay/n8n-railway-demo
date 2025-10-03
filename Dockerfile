@@ -5,4 +5,4 @@ FROM n8nio/n8n:latest
 ENV N8N_HOST=n8n-railway-demo-production.up.railway.app
 
 # Expose internal port (n8n default). Railway will map its runtime $PORT to this. #
-EXPOSE 5678
+EXPOSE 8080
