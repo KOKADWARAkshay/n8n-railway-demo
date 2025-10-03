@@ -1,9 +1,10 @@
+# Use official n8n image and don't override the image entrypoint/command
 FROM n8nio/n8n:latest
 
-# Railway sets PORT dynamically. Tell n8n to use it.
-ENV N8N_PORT=$PORT
+# make n8n listen on 0.0.0.0
 ENV N8N_HOST=0.0.0.0
 
-EXPOSE $PORT
+# expose the default port inside the container (Railway will map it)
+EXPOSE 5678
 
-CMD ["n8n", "start"]
+# Do NOT set a CMD here — let the base image handle starting n8n
