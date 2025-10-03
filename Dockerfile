@@ -1,53 +1,46 @@
-# ----------------------------
+############################################
 # ✅ STEP 1: Base Image
-# ----------------------------
-# Use the official n8n image (keeps it lightweight & secure)
+############################################
 FROM n8nio/n8n:latest
 
-# ----------------------------
-# ✅ STEP 2: Environment Variables
-# ----------------------------
-# n8n host domain (replace with your actual Railway app domain)
-ENV N8N_HOST=n8n-railway-demo-production.up.railway.app
+############################################
+# ✅ STEP 2: Core Environment Variables
+############################################
 
-# Protocol used (Railway gives HTTPS by default)
+# Public domain (Replace with your Railway subdomain)
+ENV N8N_HOST=n8n-railway-demo-production.up.railway.app
+ENV WEBHOOK_URL=https://n8n-railway-demo-production.up.railway.app/
 ENV N8N_PROTOCOL=https
 
-# Webhook URL for external triggers (must match public URL)
-ENV WEBHOOK_URL=https://n8n-railway-demo-production.up.railway.app/
-
-# Make n8n listen on all network interfaces
+# Make n8n listen on all network interfaces inside container
 ENV N8N_LISTEN_ADDRESS=0.0.0.0
 
-# Default port inside container (Railway maps $PORT to this)
+# Railway automatically maps its runtime $PORT → 8080
 ENV N8N_PORT=8080
 ENV PORT=8080
 
-# Set timezone (optional)
+# Optional: Timezone
 ENV GENERIC_TIMEZONE=Asia/Kolkata
 
-# ----------------------------
-# ✅ STEP 3: Security & Authentication
-# ----------------------------
-# Enable Basic Auth
+############################################
+# ✅ STEP 3: Security Configuration
+############################################
+
+# Enable Basic Authentication for n8n UI
 ENV N8N_BASIC_AUTH_ACTIVE=true
 ENV N8N_BASIC_AUTH_USER=admin
 ENV N8N_BASIC_AUTH_PASSWORD=YourStrongPassHere
 
-# Required for credential encryption (MUST be fixed & long)
+# Required: Encryption key for secure credentials storage
+# ⚠️ Must remain same across deployments
 ENV N8N_ENCRYPTION_KEY=PasteAReallyLongRandomSecretHere
 
-# ----------------------------
-# ✅ STEP 4: Database
-# ----------------------------
-# You can use SQLite for quick demo or PostgreSQL for persistence.
-# Comment/uncomment as needed.
+############################################
+# ✅ STEP 4: Database Configuration
+############################################
 
-# 👉 For SQLite (ephemeral, not recommended for prod):
-ENV DB_TYPE=sqlite
-ENV DB_SQLITE_POOL_SIZE=5
-
-# 👉 For PostgreSQL (recommended for Railway)
+# 🚀 Recommended: PostgreSQL (persistent)
+# Uncomment and fill with Railway PG credentials
 # ENV DB_TYPE=postgresdb
 # ENV DB_POSTGRESDB_HOST=<PGHOST>
 # ENV DB_POSTGRESDB_PORT=<PGPORT>
@@ -55,31 +48,38 @@ ENV DB_SQLITE_POOL_SIZE=5
 # ENV DB_POSTGRESDB_PASSWORD=<PGPASSWORD>
 # ENV DB_POSTGRESDB_DATABASE=<PGDATABASE>
 
-# ----------------------------
-# ✅ STEP 5: Deprecation & Security Flags
-# ----------------------------
-# Enables background task runners (future default)
+# 🧪 For demo only (SQLite = ephemeral)
+ENV DB_TYPE=sqlite
+ENV DB_SQLITE_POOL_SIZE=5
+
+############################################
+# ✅ STEP 5: Deprecation Fixes & Future-Proofing
+############################################
+
+# Enable new Task Runner model
 ENV N8N_RUNNERS_ENABLED=true
 
-# Restricts Code Nodes from accessing environment variables (recommended)
+# Prevent env access in Code nodes (secure)
 ENV N8N_BLOCK_ENV_ACCESS_IN_NODE=true
 
-# Disables unsafe Git bare repo usage
+# Disable bare Git repositories (security)
 ENV N8N_GIT_NODE_DISABLE_BARE_REPOS=true
 
-# Fixes settings file permissions
+# Auto-fix permission warnings
 ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
 
-# ----------------------------
-# ✅ STEP 6: Production Settings
-# ----------------------------
+############################################
+# ✅ STEP 6: Production Mode
+############################################
 ENV NODE_ENV=production
 
-# Expose internal port
+############################################
+# ✅ STEP 7: Port Exposure
+############################################
 EXPOSE 8080
 
-# ----------------------------
-# ✅ STEP 7: Entrypoint
-# ----------------------------
-# n8n official image already includes proper entrypoint and CMD
-# DO NOT override them
+############################################
+# ✅ STEP 8: Entrypoint
+############################################
+# Do NOT override ENTRYPOINT or CMD.
+# The base n8n image already handles startup gracefully.
