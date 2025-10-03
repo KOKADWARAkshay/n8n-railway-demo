@@ -1,7 +1,12 @@
 FROM n8nio/n8n:latest
 
-# n8n should bind to all interfaces inside the container
+# Bind to all interfaces inside container
 ENV N8N_HOST=0.0.0.0
 
-# Expose default internal port (Railway maps its runtime $PORT -> this internal port)
+# Railway maps $PORT to this container port
+ENV N8N_PORT=$PORT
+
+# Expose default n8n port (5678 internally, but overridden by $PORT)
 EXPOSE 5678
+
+CMD ["n8n", "start"]
