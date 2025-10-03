@@ -1,13 +1,11 @@
 FROM n8nio/n8n:latest
 
-# Tell n8n to bind to all interfaces
+# Railway gives us a dynamic port in $PORT.
+# Force n8n to use that instead of 5678.
 ENV N8N_HOST=0.0.0.0
+ENV N8N_PORT=$PORT
 
-# Let Railway provide the runtime PORT; map it to n8n
-# Use a fallback 5678 if PORT is not set (so it still works locally).
-ENV N8N_PORT=${PORT:-5678}
+EXPOSE $PORT
 
-# Expose the runtime port
-EXPOSE ${PORT:-5678}
-
-# DON'T override entrypoint — the base image will start n8n
+# Start n8n with the correct port
+CMD ["sh", "-c", "export N8N_PORT=$PORT && n8n start"]
